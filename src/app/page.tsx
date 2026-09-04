@@ -1,65 +1,61 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import Navbar from "@/components/layout/Navbar";
+import Hero from "@/components/sections/Hero";
+import About from "@/components/sections/About";
+import Products from "@/components/sections/Products";
+import Gallery from "@/components/sections/Gallery";
+import Contact from "@/components/sections/Contact";
+import Footer from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: "OM Construction | Mechanical & Civil Contractor | Power Plants, Solar & Infrastructure",
+  description:
+    "OM Construction is a premier ISO 9001:2015 certified EPC civil and mechanical contractor based in Ratnagiri, Maharashtra. Specialists in power plant construction, 400KV substation civil works, solar park development, wind energy infrastructure, and large-scale industrial civil projects since 2000. Trusted by L&T, ABB India, TATA Projects, and Gammon India.",
+  keywords: [
+    "EPC contractor India",
+    "civil contractor Maharashtra",
+    "power plant construction",
+    "solar park civil works",
+    "substation foundation contractor",
+    "cooling tower construction",
+    "NDCT cooling tower",
+    "400 KV substation civil",
+    "wind energy civil contractor",
+    "OM Construction Ratnagiri",
+    "ISO 9001 construction company",
+    "mechanical civil contractor India",
+  ],
+  openGraph: {
+    title: "OM Construction | Premier EPC Contractor – Power, Solar & Civil Infrastructure",
+    description:
+      "26 years of precision engineering excellence. Delivering power plants, solar parks, substations and industrial civil works across India. ISO 9001:2015 Certified.",
+    type: "website",
+    locale: "en_IN",
+    siteName: "OM Construction",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="relative">
+      <Navbar />
+      <Hero />
+      <About />
+      <Products />
+      <Gallery />
+      <Contact />
+      <Footer />
+    </main>
   );
 }
