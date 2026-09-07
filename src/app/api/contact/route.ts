@@ -3,9 +3,14 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const recipient = process.env.CONTACT_TO_EMAIL ?? "omconstruction1716@gmail.com";
-const sender = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
+const defaultRecipient = "omconstruction1716@gmail.com";
+const sender = "onboarding@resend.dev";
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function getRecipient(): string {
+  const envVal = (process.env.CONTACT_TO_EMAIL || "").trim();
+  return emailPattern.test(envVal) ? envVal : defaultRecipient;
+}
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => {
@@ -22,7 +27,7 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = (process.env.RESEND_API_KEY || "").trim();
 
   if (!apiKey) {
     console.error("RESEND_API_KEY is not set on Vercel environment variables.");
@@ -55,7 +60,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
     }
 
+    const recipient = getRecipient();
     const resend = new Resend(apiKey);
+
     const { data, error } = await resend.emails.send({
       from: sender,
       to: [recipient],
@@ -83,7 +90,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Resend send email error:", error);
       return NextResponse.json(
-        { error: `Resend email error: ${error.message || JSON.stringify(error)}` },
+        { error: `Resend error: ${error.message || JSON.stringify(error)}` },
         { status: 500 }
       );
     }
