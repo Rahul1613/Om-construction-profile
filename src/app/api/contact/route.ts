@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const recipient = process.env.CONTACT_TO_EMAIL ?? "omconstruction1716@gmail.com";
-const sender = process.env.CONTACT_FROM_EMAIL ?? "OM Construction <onboarding@resend.dev>";
+const sender = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function escapeHtml(value: string) {
@@ -22,6 +22,16 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not set on Vercel environment variables.");
+    return NextResponse.json(
+      { error: "RESEND_API_KEY is missing on Vercel. Please add RESEND_API_KEY in Vercel settings and redeploy." },
+      { status: 500 }
+    );
+  }
+
   try {
     const body: unknown = await request.json();
     if (!body || typeof body !== "object") {
@@ -29,11 +39,6 @@ export async function POST(request: Request) {
     }
 
     const { name, email, phone, message } = body as Record<string, unknown>;
-    const values = [name, email, phone, message];
-    if (!values.every((value) => value === undefined || typeof value === "string")) {
-      return NextResponse.json({ error: "Invalid enquiry details." }, { status: 400 });
-    }
-
     const safeName = typeof name === "string" ? name.trim() : "";
     const safeEmail = typeof email === "string" ? email.trim() : "";
     const safePhone = typeof phone === "string" ? phone.trim() : "";
@@ -42,7 +47,7 @@ export async function POST(request: Request) {
     if (!safeName || !safeEmail || !safeMessage) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -50,58 +55,47 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
     }
 
-    if (safeName.length > 120 || safeEmail.length > 254 || safePhone.length > 40 || safeMessage.length > 5_000) {
-      return NextResponse.json({ error: "Your enquiry is too long." }, { status: 400 });
-    }
+    const resend = new Resend(apiKey);
+    const { data, error } = await resend.emails.send({
+      from: sender,
+      to: [recipient],
+      replyTo: safeEmail,
+      subject: `New website enquiry from ${safeName}`,
+      text: [
+        "New enquiry from the OM Construction website",
+        `Name: ${safeName}`,
+        `Email: ${safeEmail}`,
+        `Phone: ${safePhone || "Not provided"}`,
+        "",
+        "Message:",
+        safeMessage,
+      ].join("\n"),
+      html: `
+        <h2>New website enquiry</h2>
+        <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(safePhone || "Not provided")}</p>
+        <p><strong>Message:</strong></p>
+        <p>${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>
+      `,
+    });
 
-    if (process.env.RESEND_API_KEY) {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      const { error } = await resend.emails.send({
-        from: sender,
-        to: [recipient],
-        replyTo: safeEmail,
-        subject: `New website enquiry from ${safeName}`,
-        text: [
-          "New enquiry from the OM Construction website",
-          `Name: ${safeName}`,
-          `Email: ${safeEmail}`,
-          `Phone: ${safePhone || "Not provided"}`,
-          "",
-          "Message:",
-          safeMessage,
-        ].join("\n"),
-        html: `
-          <h2>New website enquiry</h2>
-          <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
-          <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
-          <p><strong>Phone:</strong> ${escapeHtml(safePhone || "Not provided")}</p>
-          <p><strong>Message:</strong></p>
-          <p>${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>
-        `,
-      });
-
-      if (error) {
-        console.error("Resend contact email failed:", error);
-      }
-    } else {
-      console.log("Website Enquiry Received (no RESEND_API_KEY set):", {
-        name: safeName,
-        email: safeEmail,
-        phone: safePhone,
-        message: safeMessage,
-        timestamp: new Date().toISOString(),
-      });
+    if (error) {
+      console.error("Resend send email error:", error);
+      return NextResponse.json(
+        { error: `Resend email error: ${error.message || JSON.stringify(error)}` },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
       success: true,
       message: "Thank you for your enquiry. We will contact you soon.",
+      data,
     });
-  } catch (error) {
-    console.error("Contact form error:", error);
-    return NextResponse.json(
-      { error: "We could not send your enquiry. Please call us on +91 9158636465." },
-      { status: 500 },
-    );
+  } catch (error: unknown) {
+    const errMessage = error instanceof Error ? error.message : "Internal Server Error";
+    console.error("Contact form catch error:", error);
+    return NextResponse.json({ error: errMessage }, { status: 500 });
   }
 }
