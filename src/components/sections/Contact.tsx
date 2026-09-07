@@ -13,12 +13,14 @@ export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
+  const [isSubmitError, setIsSubmitError] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage("");
+    setIsSubmitError(false);
 
     try {
       const response = await fetch('/api/contact', {
@@ -35,9 +37,11 @@ export default function Contact() {
         setSubmitMessage(data.message);
         setForm({ name: "", email: "", phone: "", message: "" });
       } else {
+        setIsSubmitError(true);
         setSubmitMessage(data.error || 'Something went wrong. Please try again.');
       }
-    } catch (error) {
+    } catch {
+      setIsSubmitError(true);
       setSubmitMessage('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -68,14 +72,14 @@ export default function Contact() {
   return (
     <section id="contact" ref={sectionRef} className="section-padding bg-white">
       <div className="container-width">
-        <h2 className={`section-title ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>Contact Us</h2>
+        <h2 className={`section-title scroll-animate ${isVisible ? 'visible' : ''}`}>Contact Us</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className={isVisible ? 'animate-fade-in-up' : 'opacity-0'} style={{ animationDelay: '0.2s' }}>
+          <div className={`scroll-animate ${isVisible ? 'visible' : ''} delay-200`}>
             <h3 className="font-bold text-xl text-gray-800 mb-4">Get In Touch</h3>
             <div className="space-y-4">
               <div>
                 <div className="font-semibold text-gray-800 mb-1">Address</div>
-                <div className="text-gray-600">Ratnagiri, Maharashtra, India - 415612</div>
+                <div className="text-gray-600">Head Office: 3466/C, Sailakshmi, 15 Maad Kond, Veer Savarkar Marg, Mirya Road, Ratnagiri – 415612.</div>
               </div>
               <div>
                 <div className="font-semibold text-gray-800 mb-1">Phone</div>
@@ -101,7 +105,7 @@ export default function Contact() {
               </div>
             </div>
           </div>
-          <div className={isVisible ? 'animate-fade-in-up' : 'opacity-0'} style={{ animationDelay: '0.4s' }}>
+          <div className={`scroll-animate ${isVisible ? 'visible' : ''} delay-400`}>
             <form onSubmit={handleSubmit} className="space-y-4" aria-label="Contact form">
               <div>
                 <label htmlFor="name" className="sr-only">Your Name</label>
@@ -161,7 +165,7 @@ export default function Contact() {
                 {isSubmitting ? 'Sending...' : 'Send Enquiry'}
               </button>
               {submitMessage && (
-                <div className={`text-center text-sm ${submitMessage.includes('error') || submitMessage.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>
+                <div className={`text-center text-sm ${isSubmitError ? 'text-red-600' : 'text-green-600'}`} role="status">
                   {submitMessage}
                 </div>
               )}

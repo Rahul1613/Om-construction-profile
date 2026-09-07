@@ -7,7 +7,7 @@ import CountUp from "react-countup";
 
 const stats = [
   { value: 26, suffix: "+", label: "Years of Excellence", sub: "Established 2000" },
-  { value: 29, suffix: "+", label: "Major Projects", sub: "Across 5 States" },
+  { value: 32, suffix: "+", label: "Major Projects", sub: "Across 5 States" },
   { value: 600, suffix: "+", label: "Skilled Workforce", sub: "Engineers to Laborers" },
   { value: 4000, suffix: " MW+", label: "Power Capacity Served", sub: "Thermal & Renewable" },
   { value: 20, suffix: "+", label: "Equipment Categories", sub: "Company-Owned Fleet" },

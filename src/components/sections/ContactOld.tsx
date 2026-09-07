@@ -9,7 +9,7 @@ const contactDetails = [
   {
     icon: MapPin,
     label: "Registered Office",
-    value: "Ratnagiri, Maharashtra, India",
+    value: "Head Office: 3466/C, Sailakshmi, 15 Maad Kond, Veer Savarkar Marg, Mirya Road, Ratnagiri – 415612",
     sub: "Konkan Region",
   },
   {

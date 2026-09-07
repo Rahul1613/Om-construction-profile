@@ -14,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "OM Construction - Mechanical & Civil Contractor | Power Plants, Solar, Wind Energy",
-  description: "OM Construction is a premier Mechanical & Civil Contractor established in 2000, specializing in power plants, electrical substations, renewable energy projects, and heavy civil construction across India. 26+ years experience, 600+ workforce, 29+ completed projects.",
+  description: "OM Construction is a premier Mechanical & Civil Contractor established in 2000, specializing in power plants, electrical substations, renewable energy projects, and heavy civil construction across India. 26+ years experience, 600+ workforce, 32+ completed projects.",
   keywords: "OM Construction, Mechanical Contractor, Civil Contractor, Power Plants, Electrical Substations, Solar Projects, Wind Energy, Industrial Civil Works, RCC Structures, Maharashtra, India, Construction Company",
   authors: [{ name: "OM Construction" }],
   creator: "OM Construction",
@@ -25,6 +25,10 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL('http://localhost:3000'),
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-icon.png',
+  },
   openGraph: {
     title: "OM Construction - Mechanical & Civil Contractor",
     description: "Premier Mechanical & Civil Contractor specializing in power plants, electrical substations, renewable energy projects across India since 2000.",

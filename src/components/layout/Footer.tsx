@@ -54,7 +54,7 @@ export default function Footer() {
           <div className={isVisible ? 'animate-fade-in-up' : 'opacity-0'} style={{ animationDelay: '0.3s' }}>
             <div className="font-bold text-white mb-4">Contact Info</div>
             <div className="space-y-2 text-gray-400 text-sm">
-              <div>Ratnagiri, Maharashtra, India</div>
+              <div>Head Office: 3466/C, Sailakshmi, 15 Maad Kond, Veer Savarkar Marg, Mirya Road, Ratnagiri – 415612</div>
               <div>+91 9158636465</div>
               <div>omconstruction1716@gmail.com</div>
             </div>

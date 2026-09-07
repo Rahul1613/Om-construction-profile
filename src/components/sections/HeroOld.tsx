@@ -21,7 +21,7 @@ export default function Hero() {
 
   const stats = [
     { value: yearsExperience, suffix: "+", label: "Years of Excellence" },
-    { value: 29, suffix: "", label: "Major Projects" },
+    { value: 32, suffix: "", label: "Major Projects" },
     { value: 600, suffix: "+", label: "Workforce Strength" },
     { value: 15, suffix: "+", label: "Enterprise Clients" },
   ];
@@ -256,23 +256,6 @@ export default function Hero() {
             </span>
           </motion.div>
         ))}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 + idx * 0.1 }}
-              className="flex flex-col items-center md:items-start text-center md:text-left md:border-l border-brand-navy-light md:pl-6 first:border-l-0"
-            >
-              <div className="font-display font-black text-3xl sm:text-4xl text-white tracking-tight flex items-baseline">
-                {inView ? (
-                  <CountUp end={stat.value} duration={3} delay={0.5} />
-                ) : (
-                  <span>0</span>
-                )}
-                <span className="text-brand-orange ml-0.5">{stat.suffix}</span>
-              </div>
-              <span className="text-xs uppercase font-extrabold tracking-wider text-brand-gold mt-2">
-                {stat.label}
-              </span>
-            </motion.div>
-          ))}
         </div>
       </div>
     </section>

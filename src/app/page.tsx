@@ -6,11 +6,12 @@ import Products from "@/components/sections/Products";
 import Gallery from "@/components/sections/Gallery";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
+import QuickContactFloat from "@/components/layout/QuickContactFloat";
 
 export const metadata: Metadata = {
   title: "OM Construction | Mechanical & Civil Contractor | Power Plants, Solar & Infrastructure",
   description:
-    "OM Construction is a premier ISO 9001:2015 certified EPC civil and mechanical contractor based in Ratnagiri, Maharashtra. Specialists in power plant construction, 400KV substation civil works, solar park development, wind energy infrastructure, and large-scale industrial civil projects since 2000. Trusted by L&T, ABB India, TATA Projects, and Gammon India.",
+    "OM Construction is a premier ISO 9001:2015 certified EPC civil and mechanical contractor based in Ratnagiri, Maharashtra. Specialists in power plant construction, 400KV substation civil works, solar park development, wind energy infrastructure, and large-scale industrial civil projects since 2000. Trusted by L&T, ABB India, TATA Projects, and Gammon India. 32+ completed projects.",
   keywords: [
     "EPC contractor India",
     "civil contractor Maharashtra",
@@ -56,6 +57,7 @@ export default function Home() {
       <Gallery />
       <Contact />
       <Footer />
+      <QuickContactFloat />
     </main>
   );
 }
