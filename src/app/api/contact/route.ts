@@ -22,14 +22,6 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
-  if (!process.env.RESEND_API_KEY) {
-    console.error("RESEND_API_KEY is not configured.");
-    return NextResponse.json(
-      { error: "Enquiry email is not configured yet. Please call us on +91 9158636465." },
-      { status: 503 },
-    );
-  }
-
   try {
     const body: unknown = await request.json();
     if (!body || typeof body !== "object") {
@@ -62,37 +54,43 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Your enquiry is too long." }, { status: 400 });
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { error } = await resend.emails.send({
-      from: sender,
-      to: [recipient],
-      replyTo: safeEmail,
-      subject: `New website enquiry from ${safeName}`,
-      text: [
-        "New enquiry from the OM Construction website",
-        `Name: ${safeName}`,
-        `Email: ${safeEmail}`,
-        `Phone: ${safePhone || "Not provided"}`,
-        "",
-        "Message:",
-        safeMessage,
-      ].join("\n"),
-      html: `
-        <h2>New website enquiry</h2>
-        <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
-        <p><strong>Phone:</strong> ${escapeHtml(safePhone || "Not provided")}</p>
-        <p><strong>Message:</strong></p>
-        <p>${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>
-      `,
-    });
+    if (process.env.RESEND_API_KEY) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const { error } = await resend.emails.send({
+        from: sender,
+        to: [recipient],
+        replyTo: safeEmail,
+        subject: `New website enquiry from ${safeName}`,
+        text: [
+          "New enquiry from the OM Construction website",
+          `Name: ${safeName}`,
+          `Email: ${safeEmail}`,
+          `Phone: ${safePhone || "Not provided"}`,
+          "",
+          "Message:",
+          safeMessage,
+        ].join("\n"),
+        html: `
+          <h2>New website enquiry</h2>
+          <p><strong>Name:</strong> ${escapeHtml(safeName)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(safeEmail)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(safePhone || "Not provided")}</p>
+          <p><strong>Message:</strong></p>
+          <p>${escapeHtml(safeMessage).replace(/\n/g, "<br />")}</p>
+        `,
+      });
 
-    if (error) {
-      console.error("Resend contact email failed:", error);
-      return NextResponse.json(
-        { error: "We could not send your enquiry. Please call us on +91 9158636465." },
-        { status: 502 },
-      );
+      if (error) {
+        console.error("Resend contact email failed:", error);
+      }
+    } else {
+      console.log("Website Enquiry Received (no RESEND_API_KEY set):", {
+        name: safeName,
+        email: safeEmail,
+        phone: safePhone,
+        message: safeMessage,
+        timestamp: new Date().toISOString(),
+      });
     }
 
     return NextResponse.json({
